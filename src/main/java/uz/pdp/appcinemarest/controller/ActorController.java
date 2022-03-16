@@ -7,19 +7,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import uz.pdp.appcinemarest.entity.Actor;
-import uz.pdp.appcinemarest.entity.Attachment;
-import uz.pdp.appcinemarest.entity.AttachmentContent;
 import uz.pdp.appcinemarest.entity.Distributor;
 import uz.pdp.appcinemarest.payload.ActorDto;
 import uz.pdp.appcinemarest.payload.ApiResponse;
-import uz.pdp.appcinemarest.payload.DistributorDto;
-import uz.pdp.appcinemarest.repository.ActorRepository;
-import uz.pdp.appcinemarest.repository.AttachmentContentRepository;
-import uz.pdp.appcinemarest.repository.AttachmentRepository;
 import uz.pdp.appcinemarest.service.ActorService;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.util.List;
 
 // Zuhridin Bakhriddinov 3/15/2022 12:43 AM
 @RequestMapping("/actor")
@@ -28,17 +21,18 @@ public class ActorController {
 
     @Autowired
     ActorService actorService;
+
     @PostMapping
     public HttpEntity<?> saveActor(@RequestPart("file") MultipartFile file,
                                    @RequestPart("json") ActorDto actorDto) {
 
         Actor actor = actorService.saveActor(file, actorDto);
-        if (actor!=null){
+        if (actor != null) {
             return new ResponseEntity(new ApiResponse("success",
-                    true, actor ), HttpStatus.OK);
-        }else
+                    true, actor), HttpStatus.OK);
+        } else
             return new ResponseEntity(new ApiResponse("Wrong",
-                    false, null ), HttpStatus.NOT_FOUND);
+                    false, null), HttpStatus.NOT_FOUND);
 
     }
 
@@ -52,22 +46,25 @@ public class ActorController {
     }
 
     @PutMapping("/{id}")
-    public HttpEntity editActor(@PathVariable int id,@RequestPart("file") MultipartFile file,
-                                @RequestPart("json") ActorDto actorDto){
-        boolean b = actorService.editActor(id, actorDto,file);
+    public HttpEntity editActor(@PathVariable int id, @RequestPart("file") MultipartFile file,
+                                @RequestPart("json") ActorDto actorDto) {
+        boolean b = actorService.editActor(id, actorDto, file);
 
         if (b) {
             return new ResponseEntity(new ApiResponse("success",
                     true, true), HttpStatus.OK);
-        }
-        else  return new ResponseEntity(new ApiResponse("wrong",
+        } else return new ResponseEntity(new ApiResponse("wrong",
                 false, false), HttpStatus.BAD_REQUEST);
 
     }
 
+    @GetMapping
+    public HttpEntity getAllActor() {
+        List<Actor> actorList = actorService.getActorList();
+        return new ResponseEntity(new ApiResponse("success",
+                true, actorList), HttpStatus.OK);
 
-
-
+    }
 
 
 }

@@ -3,6 +3,8 @@ package uz.pdp.appcinemarest.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import java.util.List;
@@ -19,24 +21,25 @@ public class Movie {
     private String title;
     private String description;
     private int durationInMinutes;
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Attachment coverImage;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Attachment trailerVideo;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Director> directors;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Genre> genres;
 
     private double minPrice;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Distributor distributor;
 
-    @ManyToMany
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @ManyToMany(cascade = CascadeType.ALL)
     private List<Actor> actors;
 
     private double distributorShareInPercent;

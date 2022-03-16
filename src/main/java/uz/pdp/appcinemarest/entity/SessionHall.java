@@ -16,10 +16,10 @@ public class SessionHall {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     MovieSession movieSession;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     Hall hall;
 
 }

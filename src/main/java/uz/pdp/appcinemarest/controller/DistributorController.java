@@ -24,8 +24,7 @@ public class DistributorController {
 
 
     @PostMapping
-    public HttpEntity<?> registerUser(@RequestBody DistributorDto distributorDto) {
-
+    public HttpEntity<?> saveDistributor(@RequestBody DistributorDto distributorDto) {
         Distributor distributor = distributorService.addDistributor(distributorDto);
         if (distributor == null)
             return new ResponseEntity(new ApiResponse("wrong",

@@ -27,15 +27,15 @@ public class ActorService {
     @Autowired
     AttachmentContentRepository attachmentContentRepository;
 
-    public Actor saveActor(MultipartFile file, ActorDto actorDto){
+    public Actor saveActor(MultipartFile file, ActorDto actorDto) {
         try {
             Attachment attachment = new Attachment();
             attachment.setName(file.getName());
             attachment.setContentType(file.getContentType());
             attachment.setSize(file.getSize());
             attachmentRepository.save(attachment);
-            attachmentContentRepository.save(new AttachmentContent(attachment,file.getBytes()));
-            Actor actor=new Actor();
+            attachmentContentRepository.save(new AttachmentContent(attachment, file.getBytes()));
+            Actor actor = new Actor();
             actor.setName(actorDto.getName());
             actor.setPhoto(attachment);
             return actorRepository.save(actor);
@@ -43,10 +43,10 @@ public class ActorService {
         } catch (IOException e) {
             e.printStackTrace();
         }
-return null;
+        return null;
     }
 
-    public boolean deleteActor(int id){
+    public boolean deleteActor(int id) {
         List<Actor> all = actorRepository.findAll();
 
         for (Actor actor : all) {
@@ -61,30 +61,40 @@ return null;
     }
 
 
-    public boolean editActor(int id, ActorDto actorDto,MultipartFile file) {
+    public boolean editActor(int id, ActorDto actorDto, MultipartFile file) {
         Optional<Actor> actorOptional = actorRepository.findById(id);
         if (!actorOptional.isPresent()) {
             return false;
         }
+
         try {
-            Attachment attachment = new Attachment();
-            attachment.setName(file.getName());
-            attachment.setContentType(file.getContentType());
-            attachment.setSize(file.getSize());
+            Actor actor1 = actorOptional.get();
+            Attachment attachment1 = actor1.getPhoto();
+
+            AttachmentContent attachmentContent1 = attachment1.getAttachmentContent();
+            attachment1.setName(file.getName());
+            attachment1.setContentType(file.getContentType());
+            attachment1.setSize(file.getSize());
 //            actorRepository.deleteById(actorDto.getPhotoId());
-            attachmentRepository.save(attachment);
-            attachmentContentRepository.save(new AttachmentContent(attachment,file.getBytes()));
+
+            attachmentContent1.setData(file.getBytes());
+            attachmentContent1.setAttachment(attachment1);
+
+           // attachmentContentRepository.save(new AttachmentContent(attachment1, file.getBytes()));
             Actor actor = actorOptional.get();
-            actor.setName(actorDto.getName());
-            actor.setPhoto(attachment);
-             actorRepository.save(actor);
+            actor1.setName(actorDto.getName());
+            actor1.setPhoto(attachment1);
+            actorRepository.save(actor1);
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return false;
-
-
-
     }
+
+
+    public List<Actor> getActorList() {
+        return actorRepository.findAll();
+    }
+
 }

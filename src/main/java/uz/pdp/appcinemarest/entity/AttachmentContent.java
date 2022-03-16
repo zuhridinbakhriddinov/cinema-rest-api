@@ -21,7 +21,7 @@ public class AttachmentContent  {
     private Integer id;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Attachment attachment;
 
     private byte[] data;

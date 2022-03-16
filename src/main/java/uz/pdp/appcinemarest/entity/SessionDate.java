@@ -19,7 +19,7 @@ public class SessionDate {
     private Integer id;
 
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     private MovieSession movieSession;
 
     private Date date;

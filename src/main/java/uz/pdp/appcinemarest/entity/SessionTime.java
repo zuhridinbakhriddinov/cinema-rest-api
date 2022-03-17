@@ -19,8 +19,7 @@ public class SessionTime {
 
     private Timestamp time;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private SessionDate sessionDate;
+
 
 
 }

@@ -16,7 +16,8 @@ public interface CustomAfisha {
 
     Integer getMovieCoverImgId();
 
-    LocalDate getStartedDate();
+    Integer getStartedDateId();
+
 
 
     @Value("#{@hallRepository.getAllHallByMovieId(target.id)}")

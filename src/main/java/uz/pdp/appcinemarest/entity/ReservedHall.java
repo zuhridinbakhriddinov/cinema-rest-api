@@ -5,21 +5,31 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
 
-// Zuhridin Bakhriddinov 3/14/2022 6:26 PM
+// Zuhridin Bakhriddinov 3/17/2022 10:23 AM
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-public class SessionDate {
+public class ReservedHall {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-
     @ManyToOne(cascade = CascadeType.ALL)
     private Afisha afisha;
 
-    private Date date;
+    @OneToOne(cascade = CascadeType.ALL)
+    private Hall hall;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private SessionDate startDate;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private SessionTime startTime;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    private SessionTime endTime;
+
+
 }

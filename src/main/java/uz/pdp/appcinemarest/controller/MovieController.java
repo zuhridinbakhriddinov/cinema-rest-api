@@ -77,6 +77,16 @@ public class MovieController {
         return new ResponseEntity("save", HttpStatus.OK);
     }
 
+    @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
+            produces = {MediaType.APPLICATION_JSON_VALUE},path = "/{id}")
+    public ResponseEntity editMovie(
+            MovieDto movie,
+            @PathVariable Integer id) {
+        System.out.println(movie);
+        movieService.editMovie(movie,id);
+        return new ResponseEntity("save", HttpStatus.OK);
+    }
+
     @DeleteMapping("/{id}")
     public HttpEntity<?> deleteMovie(@PathVariable int id){
     return   movieService.deleteMovie(id);

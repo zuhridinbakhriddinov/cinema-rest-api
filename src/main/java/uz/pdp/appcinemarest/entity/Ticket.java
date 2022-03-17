@@ -18,7 +18,7 @@ public class Ticket {
     private Integer id;
 
     @OneToOne
-    private MovieSession movieSession;
+    private Afisha afisha;
 
     @OneToOne
     private Seat seat;

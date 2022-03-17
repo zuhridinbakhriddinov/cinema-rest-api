@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-public class MovieSession {
+public class Afisha {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

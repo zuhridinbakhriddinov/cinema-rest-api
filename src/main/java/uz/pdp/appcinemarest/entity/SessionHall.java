@@ -17,7 +17,7 @@ public class SessionHall {
     private Integer id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    MovieSession movieSession;
+    Afisha afisha;
 
     @ManyToOne(cascade = CascadeType.ALL)
     Hall hall;

@@ -6,6 +6,6 @@ import uz.pdp.appcinemarest.entity.CashBox;
 import uz.pdp.appcinemarest.projection.CustomCashBox;
 import uz.pdp.appcinemarest.projection.CustomDirector;
 
-@RepositoryRestResource(path = "director",collectionResourceRel = "list",excerptProjection = CustomCashBox.class)
+@RepositoryRestResource(path = "cashBox",collectionResourceRel = "list",excerptProjection = CustomCashBox.class)
 public interface CashBoxRepository extends JpaRepository<CashBox,Integer> {
 }

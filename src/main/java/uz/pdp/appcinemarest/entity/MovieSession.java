@@ -11,13 +11,13 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-public class ReservedHall {
+public class MovieSession {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @ManyToOne(cascade = CascadeType.ALL)
-    private Afisha afisha;
+    private MovieAnnouncement movieAnnouncement;
 
     @ManyToOne(cascade = CascadeType.ALL)
     private Hall hall;

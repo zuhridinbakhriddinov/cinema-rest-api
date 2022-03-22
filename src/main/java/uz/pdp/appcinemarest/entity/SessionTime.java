@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.sql.Time;
 import java.sql.Timestamp;
 
 // Zuhridin Bakhriddinov 3/14/2022 6:30 PM
@@ -17,7 +18,7 @@ public class SessionTime {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private Timestamp time;
+    private Time time;
 
 
 

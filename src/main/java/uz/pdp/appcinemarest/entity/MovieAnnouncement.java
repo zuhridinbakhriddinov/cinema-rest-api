@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Data
 @Entity
-public class Afisha {
+public class MovieAnnouncement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -22,8 +22,7 @@ public class Afisha {
     @ManyToOne(cascade = CascadeType.ALL)
     private Movie movie;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    private Hall hall;
+
 
     private boolean isActive;
 

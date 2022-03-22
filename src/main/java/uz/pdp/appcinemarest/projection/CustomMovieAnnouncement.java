@@ -2,14 +2,13 @@ package uz.pdp.appcinemarest.projection;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.rest.core.config.Projection;
-import uz.pdp.appcinemarest.entity.Afisha;
+import uz.pdp.appcinemarest.entity.MovieAnnouncement;
 
-import java.time.LocalDate;
 import java.util.List;
 
-@Projection(types = Afisha.class)
-public interface CustomAfisha {
-    Integer getId();
+@Projection(types = MovieAnnouncement.class)
+public interface CustomMovieAnnouncement {
+ /*   Integer getId();
     Integer getMovieId();
 
     String getMovieTitle();
@@ -21,7 +20,7 @@ public interface CustomAfisha {
 
 
     @Value("#{@hallRepository.getAllHallByMovieId(target.id)}")
-    List<CustomHall> getHalls();
+    List<CustomHall> getHalls();*/
 
 
 

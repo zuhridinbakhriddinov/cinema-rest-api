@@ -6,25 +6,34 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import uz.pdp.appcinemarest.service.AfishaService;
+import uz.pdp.appcinemarest.service.MovieSessionService;
 import uz.pdp.appcinemarest.utill.Constants;
 
-// Zuhridin Bakhriddinov 3/17/2022 10:35 AM
-@RequestMapping("/afisha")
+// Zuhridin Bakhriddinov 3/18/2022 11:00 AM
 @RestController
-public class AfishaController {
-    @Autowired
-    AfishaService afishaService;
+@RequestMapping("/movie-session")
+public class MovieSessionController {
 
+
+    @Autowired
+    MovieSessionService movieSessionService;
 
     @GetMapping
-    public HttpEntity getAllAfisha(
+    public HttpEntity getAllMovieSessions(
             @RequestParam(name = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size,
             @RequestParam(name = "page", defaultValue = "1") int page,
-            @RequestParam(name = "search", defaultValue = "") String search,
-            @RequestParam(name = "sort", defaultValue = "start_date") String sort
+            @RequestParam(name = "search", defaultValue = "") String search
     ) {
-        return afishaService.getAllAfisha(page, size, search, sort, true);
+        return movieSessionService.getAllMovieSessions(
+                page,
+                size,
+                search
+        );
     }
+
+
+
+
+
 
 }

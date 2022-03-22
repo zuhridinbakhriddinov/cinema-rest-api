@@ -7,7 +7,7 @@ import uz.pdp.appcinemarest.entity.PriceCategory;
 import uz.pdp.appcinemarest.projection.CustomDirector;
 import uz.pdp.appcinemarest.projection.CustomPriceCategory;
 
-@RepositoryRestResource(path = "director",collectionResourceRel = "list",excerptProjection = CustomPriceCategory.class)
+@RepositoryRestResource(path = "priceCategory",collectionResourceRel = "list",excerptProjection = CustomPriceCategory.class)
 public interface PriceCategoryRepository extends JpaRepository<PriceCategory,Integer> {
 
 }

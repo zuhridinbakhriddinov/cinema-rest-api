@@ -7,6 +7,6 @@ import uz.pdp.appcinemarest.entity.PayType;
 import uz.pdp.appcinemarest.projection.CustomCashBox;
 import uz.pdp.appcinemarest.projection.CustomPayType;
 
-@RepositoryRestResource(path = "director",collectionResourceRel = "list",excerptProjection = CustomPayType.class)
+@RepositoryRestResource(path = "payType",collectionResourceRel = "list",excerptProjection = CustomPayType.class)
 public interface PayTypeRepository extends JpaRepository<PayType,Integer> {
 }

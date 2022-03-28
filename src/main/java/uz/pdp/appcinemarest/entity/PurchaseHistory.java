@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 // Zuhridin Bakhriddinov 3/14/2022 7:53 PM
@@ -30,10 +31,12 @@ public class PurchaseHistory {
     @OneToOne
     private Ticket ticket;
 
-    private Date date;
+    private LocalDateTime date;
 
     @OneToOne
     private PayType payType;
+
+    private String chargeId;
 
 
 

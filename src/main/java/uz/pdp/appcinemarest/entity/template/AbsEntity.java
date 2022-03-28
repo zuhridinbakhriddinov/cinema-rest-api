@@ -24,4 +24,8 @@ public abstract class AbsEntity {
 
     public AbsEntity() {
     }
+
+    public AbsEntity(String name) {
+
+    }
 }

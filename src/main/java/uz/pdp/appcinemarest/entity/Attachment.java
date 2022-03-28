@@ -23,4 +23,9 @@ public class Attachment extends AbsEntity {
     @OneToOne(mappedBy = "attachment",cascade = CascadeType.ALL)
     private AttachmentContent attachmentContent;
 
+    public Attachment( String name, String contentType, Long size) {
+        super( name);
+        this.contentType = contentType;
+        this.size = size;
+    }
 }

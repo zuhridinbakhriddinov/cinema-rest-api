@@ -19,7 +19,7 @@ public class MovieAnnouncement {
     private Integer id;
 
     @OnDelete(action = OnDeleteAction.CASCADE)
-    @ManyToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
     private Movie movie;
 
 

@@ -8,7 +8,7 @@ import uz.pdp.appcinemarest.service.MovieAnnouncementService;
 import uz.pdp.appcinemarest.utill.Constants;
 
 // Zuhridin Bakhriddinov 3/17/2022 10:35 AM
-@RequestMapping("/afisha")
+@RequestMapping("/MovieAnnouncement")
 @RestController
 public class MovieAnnouncementController {
     @Autowired
@@ -26,21 +26,21 @@ public class MovieAnnouncementController {
     }*/
 
     @PostMapping
-    public HttpEntity<?> addAfisha(@RequestBody MovieAnnouncementDto movieAnnouncementDto){
+    public HttpEntity<?> addMovieAnnouncement(@RequestBody MovieAnnouncementDto movieAnnouncementDto){
 
         return movieAnnouncementService.saveAfisha(movieAnnouncementDto);
 
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteAfisha(@PathVariable int id){
+    public HttpEntity<?> deleteMovieAnnouncement(@PathVariable int id){
 
         return movieAnnouncementService.deleteAfisha(id);
 
     }
 
     @PutMapping("/{id}")
-    public HttpEntity<?> updateAfisha(@PathVariable int id, MovieAnnouncementDto movieAnnouncementDto){
+    public HttpEntity<?> updateMovieAnnouncement(@PathVariable int id, MovieAnnouncementDto movieAnnouncementDto){
 
         return movieAnnouncementService.updateAfisha(id, movieAnnouncementDto);
 

@@ -7,6 +7,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
 import com.stripe.Stripe;
 import com.stripe.model.Balance;
+import com.stripe.model.Charge;
 import com.stripe.model.Customer;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,11 @@ public class GenerateQRCode {
         customer.setEmail("leozukich@gmail.com");
   //      System.out.println(customer.getBalance());
         Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
-        System.out.println(Balance.retrieve());
+      //  System.out.println(Balance.retrieve());
+        Charge charge=new Charge();
+        charge.setId("ch_3KiDL9GNKbQ4R3wK0J4u6H7K");
+        charge.setReceiptEmail("leozukich@gmail.com");
+        System.out.println(charge.getCustomer());
 
     }
 

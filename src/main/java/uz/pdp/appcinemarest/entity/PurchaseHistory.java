@@ -38,7 +38,10 @@ public class PurchaseHistory {
 
     private String chargeId;
 
-
-
-
+    public PurchaseHistory(User user, Ticket ticket, LocalDateTime date, String chargeId) {
+        this.user = user;
+        this.ticket = ticket;
+        this.date = date;
+        this.chargeId = chargeId;
+    }
 }

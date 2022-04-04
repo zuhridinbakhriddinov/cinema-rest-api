@@ -51,7 +51,7 @@ public class MovieService implements MovieServic {
             Page<CustomMovie> all = movieRepository.findAllByPage(
                     pageable,
                     search);
-            return ResponseEntity.ok(new ApiResponse("success", true, all));
+            return ResponseEntity.ok(new ApiResponse("success", true, all.getContent()));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ApiResponse("error", false, null));
         }

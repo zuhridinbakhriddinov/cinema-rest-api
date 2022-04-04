@@ -1,8 +1,7 @@
 package uz.pdp.appcinemarest.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 import uz.pdp.appcinemarest.entity.template.AbsEntity;
 
 import javax.persistence.CascadeType;
@@ -13,13 +12,15 @@ import javax.persistence.OneToOne;
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Setter
+@Getter
 public class Attachment extends AbsEntity {
 
     private String contentType;
 
     private Long size;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "attachment",cascade = CascadeType.ALL)
     private AttachmentContent attachmentContent;
 

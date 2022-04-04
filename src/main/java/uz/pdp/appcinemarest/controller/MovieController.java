@@ -31,8 +31,8 @@ public class MovieController {
     MovieRepository movieRepository;
 
     /*
-    *------------------- Simple pagination-----------------------
-    * */
+     *------------------- Simple pagination-----------------------
+     * */
 
   /*  @GetMapping
     public Page<CustomMovie> getAllMovie(@RequestParam int page) {
@@ -41,22 +41,21 @@ public class MovieController {
         return movieRepository.getAllMovie(pageable);
     }*/
 
- /*------------------ Advanced pagination------------------ */
-  @GetMapping
-  public HttpEntity getAllMovies(
-          @RequestParam(name = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size,
-          @RequestParam(name = "page", defaultValue = "1") int page,
-          @RequestParam(name = "search", defaultValue = "") String search,
-          @RequestParam(name = "sort", defaultValue = "title") String sort
-  ) {
-      return movieService.getAllMovies(page, size, search, sort, true);
-  }
-
-
+    /*------------------ Advanced pagination------------------ */
+    @CrossOrigin
+    @GetMapping
+    public HttpEntity getAllMovies(
+            @RequestParam(name = "size", defaultValue = Constants.DEFAULT_PAGE_SIZE) int size,
+            @RequestParam(name = "page", defaultValue = "1") int page,
+            @RequestParam(name = "search", defaultValue = "") String search,
+            @RequestParam(name = "sort", defaultValue = "title") String sort
+    ) {
+        return movieService.getAllMovies(page, size, search, sort, true);
+    }
 
 
     @GetMapping("/{id}")
-    public HttpEntity<?> getMovieById(@PathVariable int id){
+    public HttpEntity<?> getMovieById(@PathVariable int id) {
         Optional<Movie> optionalMovie = movieRepository.findById(id);
         if (!optionalMovie.isPresent()) {
             return new ResponseEntity(new ApiResponse("wrong",
@@ -78,21 +77,20 @@ public class MovieController {
     }
 
     @PutMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE},
-            produces = {MediaType.APPLICATION_JSON_VALUE},path = "/{id}")
+            produces = {MediaType.APPLICATION_JSON_VALUE}, path = "/{id}")
     public ResponseEntity editMovie(
             MovieDto movie,
             @PathVariable Integer id) {
         System.out.println(movie);
-        movieService.editMovie(movie,id);
+        movieService.editMovie(movie, id);
         return new ResponseEntity("save", HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public HttpEntity<?> deleteMovie(@PathVariable int id){
-    return   movieService.deleteMovie(id);
+    public HttpEntity<?> deleteMovie(@PathVariable int id) {
+        return movieService.deleteMovie(id);
 
     }
-
 
 
 }

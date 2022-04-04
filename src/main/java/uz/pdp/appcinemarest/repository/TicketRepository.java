@@ -11,16 +11,25 @@ import java.util.List;
 public interface TicketRepository extends JpaRepository<Ticket,Integer> {
     boolean existsBySeatId(Integer seat_id);
 
-    @Query(nativeQuery = true,value = "select distinct m.min_price+(m.min_price*h.vip_additional_fee_in_percent/100)+(pc.additional_fee_in_percent*m.min_price/100)\n" +
+    @Query(nativeQuery = true,value = "select distinct m.min_price + (m.min_price * h.vip_additional_fee_in_percent / 100) +\n" +
+            "                (pc.additional_fee_in_percent * m.min_price / 100) + (\n" +
+            "                            (select n.percentage\n" +
+            "                             from night_session_add_fee n\n" +
+            "                             where date = (select st.time\n" +
+            "                                           from movie_session\n" +
+            "                                                    join session_time st on st.id = movie_session.start_time_id\n" +
+            "                                           where movie_session.id = :movieSessionId\n" +
+            "                             )\n" +
+            "                            ) * m.min_price / 100)\n" +
             "from movie_session ms\n" +
-            "join movie_announcement ma on ms.movie_announcement_id = ma.id\n" +
-            "join movie m on m.id = ma.movie_id\n" +
-            "join hall h on ms.hall_id = h.id\n" +
-            "join row r on h.id = r.hall_id\n" +
-            "join seat s on r.id = s.row_id\n" +
-            "join price_category pc on s.price_category_id = pc.id\n" +
+            "         join movie_announcement ma on ms.movie_announcement_id = ma.id\n" +
+            "         join movie m on m.id = ma.movie_id\n" +
+            "         join hall h on ms.hall_id = h.id\n" +
+            "         join row r on h.id = r.hall_id\n" +
+            "         join seat s on r.id = s.row_id\n" +
+            "         join price_category pc on s.price_category_id = pc.id\n" +
             "where ms.id = :movieSessionId\n" +
-            "and s.id = :seatId")
+            "  and s.id = :seatId")
     Double getTicketPriceByMovieSessionIdAndSeatId(Integer movieSessionId,Integer seatId);
 
 
@@ -28,6 +37,7 @@ public interface TicketRepository extends JpaRepository<Ticket,Integer> {
             "from ticket t\n" +
             "where t.id = :ticketId")
     CustomTicketForCart getTicketByIdForCart(Integer ticketId);
+
 
     List<Ticket> findAllByUserIdAndTicketStatus(Integer user_id, TicketStatus ticketStatus);
 

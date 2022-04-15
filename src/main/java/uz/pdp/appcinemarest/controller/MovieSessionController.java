@@ -2,10 +2,10 @@ package uz.pdp.appcinemarest.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import uz.pdp.appcinemarest.payload.MovieSessionDto;
 import uz.pdp.appcinemarest.service.MovieSessionService;
 import uz.pdp.appcinemarest.utill.Constants;
 
@@ -29,13 +29,24 @@ public class MovieSessionController {
                 size,
                 search
         );
+    }
 
+    @PostMapping
+    public HttpEntity addMovieSession(@RequestBody MovieSessionDto movieSessionDto) {
+       return movieSessionService.addMovieSession(movieSessionDto);
 
+    }
+    @PutMapping("/{id}")
+    public HttpEntity updateMovieSession(@RequestBody MovieSessionDto movieSessionDto, @PathVariable int id) {
+       return movieSessionService.updateMovieSession(movieSessionDto,id);
 
     }
 
+    @DeleteMapping("/{id}")
+    public HttpEntity deleteActor(@PathVariable int id) {
+    return movieSessionService.deleteMovieSession(id);
 
-
+    }
 
 
 

@@ -10,13 +10,10 @@ import javax.persistence.ManyToMany;
 import java.util.List;
 
 // Zuhridin Bakhriddinov 3/14/2022 3:49 PM
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
+
 @Entity
 public class Permission extends AbsEntity {
 
-    @ManyToMany
-    private List<Role> role;
+
 
 }

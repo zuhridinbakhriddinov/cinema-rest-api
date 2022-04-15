@@ -4,11 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import uz.pdp.appcinemarest.payload.ApiResponse;
+import uz.pdp.appcinemarest.payload.RowDto;
 import uz.pdp.appcinemarest.projection.CustomRow;
 import uz.pdp.appcinemarest.service.RowService;
 
@@ -20,13 +18,22 @@ import java.util.List;
 public class RowController {
     @Autowired
     RowService rowService;
+
+
     @GetMapping("/{hallId}")
     public HttpEntity<?> getRowsByHallId(@PathVariable int hallId){
         List<CustomRow> row = rowService.getRow(hallId);
         return new ResponseEntity(new ApiResponse("success",
                 true, row), HttpStatus.OK);
 
+
     }
+/*    @PutMapping("/{rowId}")
+    public HttpEntity<?> updateRow(@PathVariable int rowId, RowDto rowDto){
+     return rowService.updateRow(rowId,rowDto);
+    }*/
+
+
 
 
 }

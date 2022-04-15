@@ -32,4 +32,11 @@ public class MovieSession {
     private SessionTime endTime;
 
 
+    public MovieSession(MovieAnnouncement movieAnnouncement, Hall hall, SessionDate startDate, SessionTime startTime, SessionTime endTime) {
+        this.movieAnnouncement = movieAnnouncement;
+        this.hall = hall;
+        this.startDate = startDate;
+        this.startTime = startTime;
+        this.endTime = endTime;
+    }
 }

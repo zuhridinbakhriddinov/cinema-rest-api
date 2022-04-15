@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import uz.pdp.appcinemarest.entity.Distributor;
 import uz.pdp.appcinemarest.payload.ApiResponse;
@@ -22,8 +23,8 @@ public class DistributorController {
     @Autowired
     DistributorService distributorService;
 
-
     @PostMapping
+    @PreAuthorize(value = "hasAuthority('ADD_DISTRIBUTOR')")
     public HttpEntity<?> saveDistributor(@RequestBody DistributorDto distributorDto) {
         Distributor distributor = distributorService.addDistributor(distributorDto);
         if (distributor == null)
@@ -34,6 +35,7 @@ public class DistributorController {
 
     }
 
+
     @DeleteMapping("/{id}")
     public HttpEntity deleteDistributor(@PathVariable int id) {
         boolean distributor = distributorService.deleteDistributor(id);
@@ -43,6 +45,7 @@ public class DistributorController {
             return new ResponseEntity("not deleted", HttpStatus.BAD_REQUEST);
     }
 
+    @PreAuthorize(value = "hasAuthority('GET_DISTRIBUTOR')")
     @GetMapping
     public HttpEntity getAllGroups() {
         List<Distributor> distributorList = distributorService.getDistributorList();

@@ -6,6 +6,8 @@ import com.stripe.model.Charge;
 import com.stripe.model.PaymentSource;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.checkout.SessionCreateParams;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +42,11 @@ public class PaymentService {
     @Autowired
     PayTypeRepository payTypeRepository;
 
+    @Value("${AUTH_TOKEN}")
+    String AUTH_TOKEN;
 
+    @Value("${ACCOUNT_SID}")
+    String ACCOUNT_SID;
     @SneakyThrows
     public void refundOrder(List<Ticket> allByCartIdAndStatus) {
         for (Ticket ticket : allByCartIdAndStatus) {
@@ -50,7 +56,16 @@ public class PaymentService {
         }
 
     }
-
+public void sendSms(String fullName){
+                  Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+                Message message = Message.creator(
+                                new com.twilio.type.PhoneNumber("+998930870308"),
+                                "MG799d4bb90f90006e6c4b76e0b6a2b5f1",
+                                fullName+" your ticket(s) successfully purchased!")
+                        .create();
+                message.getDirection();
+                System.out.println(message);
+}
 
 
     public void fulfillOrder(Session session) {
@@ -72,13 +87,13 @@ public class PaymentService {
         transactionalHistory.setPayType(payTypeRepositoryById.get());
         transactionalHistoryRepository.save(transactionalHistory);*/
         addTransactionHistory(Integer.valueOf(session.getClientReferenceId()), session.getPaymentIntent());
-        changeTicketStatusToPurchase(Integer.valueOf(session.getClientReferenceId()));
+        changeTicketStatusToPurchase(Integer.valueOf(session.getClientReferenceId()),TicketStatus.NEW,TicketStatus.PURCHASED);
 
     }
 
     public ResponseEntity<?> getStripeSession(User user, List<SessionCreateParams.LineItem> lineItems, List<CustomTicketForCart> ticketList) {
         for (CustomTicketForCart ticket : ticketList) {
-            double ticketPrice = ticket.getPrice();
+            double ticketPrice = (ticket.getPrice()*100+30)/(1-2.9/100);
             SessionCreateParams.LineItem.PriceData.ProductData productData = SessionCreateParams.LineItem.PriceData.ProductData
                     .builder()
                     .setName(ticket.getMovieTitle())
@@ -142,13 +157,13 @@ public class PaymentService {
         transactionalHistoryRepository.save(transactionHistory);
     }
 
-    public boolean changeTicketStatusToPurchase(Integer userId) {
+    public boolean changeTicketStatusToPurchase(Integer userId,TicketStatus firstTicketStatus,TicketStatus secondTicketStatus) {
 
         try {
             List<Ticket> ticketList =
-                    ticketRepository.findAllByUserIdAndTicketStatus(userId, TicketStatus.NEW);
+                    ticketRepository.findAllByUserIdAndTicketStatus(userId, firstTicketStatus);
             for (Ticket ticket : ticketList) {
-                ticket.setTicketStatus(TicketStatus.PURCHASED);
+                ticket.setTicketStatus(secondTicketStatus);
             }
             ticketRepository.saveAll(ticketList);
 

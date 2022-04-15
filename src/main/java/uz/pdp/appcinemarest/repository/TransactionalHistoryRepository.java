@@ -18,5 +18,5 @@ public interface TransactionalHistoryRepository extends JpaRepository<Transactio
             "and th.is_refunded=false",nativeQuery = true)
     String getPaymentIntentByTicketId(Integer ticketId);
 
-
+TransactionalHistory findByPaymentIntent(String paymentIntent);
 }

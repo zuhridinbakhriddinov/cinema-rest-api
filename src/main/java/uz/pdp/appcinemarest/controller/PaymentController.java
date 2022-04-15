@@ -8,8 +8,12 @@ import com.stripe.model.checkout.Session;
 import com.stripe.net.Webhook;
 import com.stripe.param.RefundCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
+import freemarker.template.TemplateException;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +25,25 @@ import uz.pdp.appcinemarest.entity.TransactionalHistory;
 import uz.pdp.appcinemarest.entity.Ticket;
 import uz.pdp.appcinemarest.entity.User;
 import uz.pdp.appcinemarest.entity.enums.TicketStatus;
+import uz.pdp.appcinemarest.mail.MailService;
 import uz.pdp.appcinemarest.projection.CustomTicketForCart;
 import uz.pdp.appcinemarest.repository.TransactionalHistoryRepository;
 import uz.pdp.appcinemarest.repository.TicketRepository;
 import uz.pdp.appcinemarest.repository.UserRepository;
+import uz.pdp.appcinemarest.security.CurrentUser;
 import uz.pdp.appcinemarest.service.AttachmentService;
 import uz.pdp.appcinemarest.service.PaymentService;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.*;
 
 @RestController
-public class PaymentController {
+public class PaymentController extends Thread {
 
     @Autowired
     TicketRepository ticketRepository;
@@ -53,13 +62,10 @@ public class PaymentController {
     PaymentService paymentService;
     @Autowired
     JavaMailSender javaMailSender;
+    @Autowired
+    MailService mailService;
 
-    @RequestMapping("/success")
-    public ModelAndView successStripePayment() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("success");
-        return modelAndView;
-    }
+    boolean success = false;
 
 
     @SneakyThrows
@@ -78,21 +84,43 @@ public class PaymentController {
                     ticketRepository.findAllByUserIdAndTicketStatus(optionalUser.get().getId(), TicketStatus.NEW);
             if (allByCartIdAndStatus.size() != 0) {
                 paymentService.fulfillOrder(session);
-                SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
-                simpleMailMessage.setFrom("leozukich@gmail.com");
-                simpleMailMessage.setTo("leozukich@gmail.com");
-                simpleMailMessage.setSubject("Hello what's up");
-                simpleMailMessage.setText("are you sleeping");
-                javaMailSender.send(simpleMailMessage);
+                success = true;
+             /*   Map<String, Object> templateModel =new HashMap<>();
+
+                templateModel.put("recipientName", optionalUser.get().getFullName());
+                String serverName = "localhost";
+                int port = 8080;
+                Socket socket = new Socket();
+                SocketAddress socketAddress = new InetSocketAddress(serverName, port);
+                socket.connect(socketAddress, 12000*100);
+                mailService.sendMessageUsingFreemarkerTemplate(templateModel);
+      */
 
             }
+
         }
 
+    }
+
+    @RequestMapping("/success")
+    public ModelAndView successStripePayment() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("success");
+        Optional<User> user = userRepository.findById(1);
+        if (success) paymentService.sendSms(user.get().getFullName());
+        return modelAndView;
+    }
+    @RequestMapping("/login")
+    public ModelAndView login() {
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.setViewName("login");
+        return modelAndView;
     }
 
 
     @GetMapping("/charge")
     public HttpEntity<?> createStripeSession() {
+
         Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
         Optional<User> optionalUser = userRepository.findById(1);
         User user = optionalUser.get();
@@ -107,26 +135,51 @@ public class PaymentController {
     @PostMapping("/refund")
     public HttpEntity createCharge(@RequestBody List<Integer> ticketIds) throws StripeException {
         Stripe.apiKey = "sk_test_51KhfDrGNKbQ4R3wKLw6i1KUhcMkIpIxduTX2JOaooftmI9u3lxS8j4apN9kYJ9UZVRl9230Jn1kWBALtzysklSEx007WRYy1hA";
+        double sum = 0;
 
+        for (Integer ticketId : ticketIds) {
+            Optional<Ticket> ticketOptional = ticketRepository.findById(ticketId);
+            sum += ticketOptional.get().getPrice() / 50;
+   }
         String paymentIntent = transactionalHistoryRepository.getPaymentIntentByTicketId(ticketIds.get(0));
+        TransactionalHistory transactionalHistory = transactionalHistoryRepository.findByPaymentIntent(paymentIntent);
+        transactionalHistory.setRefunded(true);
         System.out.println(paymentIntent);
         RefundCreateParams params =
                 RefundCreateParams
                         .builder()
                         .setPaymentIntent(paymentIntent)
-                        .setAmount(10 * 100L)
+                        .setAmount((long) sum)
                         .build();
         Refund.create(params);
 
 
-        List<Ticket> allByCartIdAndStatus =
-                ticketRepository.findAllByUserIdAndTicketStatus(1, TicketStatus.PURCHASED);
-        if (allByCartIdAndStatus.size() != 0) {
-            paymentService.refundOrder(allByCartIdAndStatus);
-        }
+        paymentService.changeTicketStatusToPurchase(1, TicketStatus.PURCHASED, TicketStatus.REFUNDED);
         return new ResponseEntity<String>("Success", HttpStatus.CREATED);
 
 
+    }
+
+
+    @PostMapping("/sms")
+    public HttpEntity<?> sms() {
+
+
+        return ResponseEntity.ok("good");
+    }
+
+    @PostMapping("/email")
+    public HttpEntity<?> email() throws IOException, TemplateException, MessagingException {
+        Map<String, Object> templateModel = new HashMap<>();
+
+        templateModel.put("recipientName", "zuhridin");
+        String serverName = "localhost";
+        int port = 8080;
+        Socket socket = new Socket();
+        SocketAddress socketAddress = new InetSocketAddress(serverName, port);
+        socket.connect(socketAddress, 12000 * 100);
+        mailService.sendMessageUsingFreemarkerTemplate(templateModel);
+        return ResponseEntity.ok("good");
     }
 
 

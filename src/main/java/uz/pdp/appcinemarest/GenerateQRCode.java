@@ -9,9 +9,14 @@ import com.stripe.Stripe;
 import com.stripe.model.Balance;
 import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.twilio.Twilio;
+import com.twilio.rest.api.v2010.account.Message;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Autowired;
+import uz.pdp.appcinemarest.entity.User;
+import uz.pdp.appcinemarest.security.CurrentUser;
 import uz.pdp.appcinemarest.service.TicketService;
+
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -36,6 +41,9 @@ public class GenerateQRCode {
         byte[] pngData = pngOutputStream.toByteArray();
         return pngData;
     }
+
+    public static final String ACCOUNT_SID = "ACb879375012eab6a0ed874018705caae6";
+    public static final String AUTH_TOKEN = "9a874bec93854080704dad74388e246c";
     @SneakyThrows
     public static void main(String args[]) throws WriterException, IOException, NotFoundException
     {
@@ -46,7 +54,7 @@ public class GenerateQRCode {
         hashMap.put(EncodeHintType.ERROR_CORRECTION, ErrorCorrectionLevel.L);
         generateQRcode(str, path, charset, hashMap, 200, 200);//increase or decrease height and width accodingly
         System.out.println("QR Code created successfully.");*/
-        byte[] qrCodeImage = getQRCodeImage("1111111", 400, 400);
+/*        byte[] qrCodeImage = getQRCodeImage("1111111", 400, 400);
         int length = qrCodeImage.length;
         Customer customer = new Customer();
         customer.setEmail("leozukich@gmail.com");
@@ -56,8 +64,18 @@ public class GenerateQRCode {
         Charge charge=new Charge();
         charge.setId("ch_3KiDL9GNKbQ4R3wK0J4u6H7K");
         charge.setReceiptEmail("leozukich@gmail.com");
-        System.out.println(charge.getCustomer());
+        System.out.println(charge.getCustomer());*/
 
+       /* Twilio.init(ACCOUNT_SID, AUTH_TOKEN);
+        Message message = Message.creator(
+                        new com.twilio.type.PhoneNumber("+998930870308"),
+                        "MG799d4bb90f90006e6c4b76e0b6a2b5f1",
+                        "salom")
+                .create();
+
+        System.out.println(message.getSid());*/
+@CurrentUser User user=new User();
+        System.out.println(user);
     }
 
 

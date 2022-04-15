@@ -12,7 +12,7 @@ public class MailConfiguration {
     @Bean
     public FreeMarkerConfigurer freemarkerClassLoaderConfig() {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_27);
-        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), "/mail-templates");
+        TemplateLoader templateLoader = new ClassTemplateLoader(this.getClass(), "/templates");
         configuration.setTemplateLoader(templateLoader);
         FreeMarkerConfigurer freeMarkerConfigurer = new FreeMarkerConfigurer();
         freeMarkerConfigurer.setConfiguration(configuration);
